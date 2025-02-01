@@ -72,9 +72,13 @@ jobs:
           
           echo "CONFIG set to: $CONFIG"
 
+      - name: Set UPNA Environment Variable    
+        run: |
           # The environment variable for the filename when uploading the build file.
-          UPNACONFIG="${{ matrix.kernel_version }}.${{ matrix.sub_level }}-${{ matrix.android_version }}-${{ matrix.os_patch_level }}"
-          echo "UPNACONFIG=$UPNACONFIG" >> $GITHUB_ENV
+          UPNA="${{ matrix.kernel_version }}.${{ matrix.sub_level }}-${{ matrix.android_version }}-${{ matrix.os_patch_level }}"
+          echo "UPNA=$UPNA" >> $GITHUB_ENV
+
+          echo "UPNA set to: $UPNA"
           
       - name: Download prebuilt toolchain
         run: |
@@ -301,7 +305,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-${{ env.UPNACONFIG }}
+          name: kernel-${{ env.UPNA }}
           path: |
             *.zip
             *.img
