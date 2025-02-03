@@ -7,6 +7,23 @@ permissions:
 on:
   workflow_dispatch:
     inputs:
+      runner:
+        description: "Choose runner"
+        required: true
+        type: choice
+        options:
+          - ubuntu-22.04
+          - ubuntu-local
+        default: ubuntu-22.04
+      lto_type:
+        description: "Choose LTO type (full will not run on basic runners)"
+        required: true
+        type: choice
+        options:
+          - full
+          - thin
+          - none
+        default: thin
       build_a12_5_10:
         description: 'Build Android 12 5.10 kernel?'
         required: true
@@ -53,6 +70,9 @@ jobs:
     uses: ./.github/workflows/build-kernel-a13-5.15.yml
     secrets: inherit
     if: ${{ inputs.build_a13_5_15 }}
+    with:
+      runner: ${{ inputs.runner }}
+      lto_type: ${{ inputs.lto_type }}
 
   build-kernel-a14-5-15:
     uses: ./.github/workflows/build-kernel-a14-5.15.yml
@@ -76,7 +96,7 @@ jobs:
     env:
       REPO_OWNER: TheWildJames
       REPO_NAME: GKI_KernelSU_SUSFS
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
       RELEASE_NAME: "*TEST BUILD* GKI Kernels With KernelSU & SUSFS v1.5.3 *TEST BUILD*"
       RELEASE_NOTES: |
         This release contains KernelSU and SUSFS v1.5.3
